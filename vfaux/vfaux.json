@@ -1,9 +1,11 @@
 {
   "Author": "veyn",
   "Name": "Easier Faux Hollows",
-  "Punchline": "Faux Hollows solver based on known patterns",
-  "Description": "Based on ezFauxHollows, but uses known patterns instead of general-purpose solver.",
+  "Punchline": "以已知圖樣求解幻巧拼圖",
+  "Description": "幻巧拼圖求解輔助。以 ezFauxHollows 為基礎，但改用已知圖樣資料庫比對，而非通用求解演算法，因此需要翻開的格數更少。開啟幻巧拼圖介面後會直接在遊戲原生面板上為各格著色：藍色代表已確定的雙劍、黃色代表已確定的箱子或寶箱、紫色代表可能的狐狸，綠色則是目前期望值最高的格子。",
   "InternalName": "vfaux",
   "ApplicableVersion": "any",
-  "IconUrl": "https://raw.githubusercontent.com/awgil/vfaux/cc5a9c0564e07cc822b6f7617bd8983c82b8207f/icon.png"
+  "RepoUrl": "https://github.com/ffxiv-tc-port/vfaux",
+  "IconUrl": "https://raw.githubusercontent.com/ffxiv-tc-port/DalamudPluginsTC/main/icons/vfaux.png",
+  "DalamudApiLevel": 13
 }
