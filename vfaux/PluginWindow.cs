@@ -29,18 +29,18 @@ internal class PluginWindow : Window
 
     public override void Draw()
     {
-        ImGui.Checkbox("Solver strategy: always find swords first", ref _solver.FindSwordsFirst);
+        ImGui.Checkbox("Solver strategy: always find swords first".Loc(), ref _solver.FindSwordsFirst);
 
         if (ImGui.BeginTabBar("Tabs"))
         {
-            if (ImGui.BeginTabItem("Current game board"))
+            if (ImGui.BeginTabItem("Current game board".Loc() + "###CurrentBoard"))
             {
                 DrawBoardTab(_gameBoard, false);
                 ImGui.EndTabItem();
             }
-            if (ImGui.BeginTabItem("Debug board"))
+            if (ImGui.BeginTabItem("Debug board".Loc() + "###DebugBoard"))
             {
-                if (ImGui.Button("Randomize!"))
+                if (ImGui.Button("Randomize!".Loc()))
                 {
                     var rng = new Random();
                     _simSheet = _solver.PatternDB.KnownPatterns[rng.Next(_solver.PatternDB.KnownPatterns.Count)];
@@ -50,7 +50,7 @@ internal class PluginWindow : Window
                     SimBoardReset();
                 }
                 ImGui.SameLine();
-                if (ImGui.Button("Reset tiles"))
+                if (ImGui.Button("Reset tiles".Loc()))
                 {
                     SimBoardReset();
                 }
@@ -76,11 +76,11 @@ internal class PluginWindow : Window
         var sheet = _solver.MatchingSheet(board);
         if (sheet == null)
         {
-            ImGui.TextUnformatted("Pattern not found!");
+            ImGui.TextUnformatted("Pattern not found!".Loc());
         }
         else
         {
-            ImGui.TextUnformatted($"Current pattern: {_solver.PatternDB.KnownPatterns.IndexOf(sheet)}");
+            ImGui.TextUnformatted("Current pattern: ??".Loc(_solver.PatternDB.KnownPatterns.IndexOf(sheet)));
             DrawSheet(sheet, board);
         }
     }

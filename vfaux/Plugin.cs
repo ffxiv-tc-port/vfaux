@@ -61,6 +61,10 @@ public sealed class Plugin : IDalamudPlugin
     {
         Log = log;
 
+        // Must run before the window is constructed or the command registered, as those
+        // resolve their .Loc() text once at construction time.
+        Localization.Init(dalamud.AssemblyLocation.DirectoryName);
+
         DalamudPluginInterface = dalamud;
         CommandManager = commmandManager;
         NotificationManager = notificationManager;
@@ -68,7 +72,8 @@ public sealed class Plugin : IDalamudPlugin
 
         _wnd = new(_board, _solver);
         WindowSystem.AddWindow(_wnd);
-        CommandManager.AddHandler("/vfaux", new CommandInfo((_, _) => _wnd.IsOpen = true) { HelpMessage = "Show plugin window" });
+        CommandManager.AddHandler("/vfaux",
+            new CommandInfo((_, _) => _wnd.IsOpen = true) { HelpMessage = "Show plugin window".Loc() });
 
         AddonLifecycle.RegisterListener(AddonEvent.PreDraw, "WeeklyPuzzle", SyncWithGameState);
         DalamudPluginInterface.UiBuilder.Draw += WindowSystem.Draw;
@@ -98,7 +103,7 @@ public sealed class Plugin : IDalamudPlugin
         NotificationManager.AddNotification(new()
         {
             Title = "Easier Faux Hollows",
-            Content = "Easier Faux Hollows is not compatible with ezFauxHollows",
+            Content = "Easier Faux Hollows is not compatible with ezFauxHollows".Loc(),
             Type = Dalamud.Interface.ImGuiNotification.NotificationType.Error
         });
     }
