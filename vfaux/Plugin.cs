@@ -135,6 +135,15 @@ public sealed class Plugin : IDalamudPlugin
                 var tileButton = GetTileButton(addon, x, y);
                 var tileBackgroundImage = GetBackgroundImageNode(tileButton);
                 var tileIconImage = GetIconImageNode(tileButton);
+
+                // 節點取不到就把這格當成未知（Tile.Unknown 是 0，AnalyzeBoard 不會誤判成任何棋型）。
+                // 下面每個 -> 都是裸解參考，null 進去就是 AVE；這是 addon 重繪路徑，不逐格寫 log。
+                if (tileBackgroundImage == null || tileIconImage == null)
+                {
+                    tileState = BoardState.Tile.Unknown;
+                    continue;
+                }
+
                 tileState = (WeeklyPuzzleTexture)tileBackgroundImage->PartId switch
                 {
                     WeeklyPuzzleTexture.Hidden => BoardState.Tile.Hidden,
@@ -184,6 +193,11 @@ public sealed class Plugin : IDalamudPlugin
                 var soln = solution[tileIndex++];
                 var tileButton = GetTileButton(addon, x, y);
                 var tileBackgroundImage = GetBackgroundImageNode(tileButton);
+
+                // 取不到就跳過這格的上色（下面是對節點的寫入，null 進去等同寫位址 0 附近）。
+                if (tileBackgroundImage == null)
+                    continue;
+
                 var (r, g, b) = soln switch
                 {
                     Solver.ConfirmedSword => (31, 174, 186),
@@ -199,6 +213,22 @@ public sealed class Plugin : IDalamudPlugin
     }
 
     private unsafe AtkComponentButton* GetTileButton(AddonWeeklyPuzzle* addon, int x, int y) => addon->GameBoard[y][x].Button;
-    private unsafe AtkImageNode* GetBackgroundImageNode(AtkComponentButton* button) => (AtkImageNode*)button->UldManager.NodeList[3];
-    private unsafe AtkImageNode* GetIconImageNode(AtkComponentButton* button) => (AtkImageNode*)button->UldManager.NodeList[6];
+
+    /// <summary>
+    /// 取出按鈕元件底下寫死索引的影像節點。
+    /// 按鈕本身、NodeList、以及索引處的元素三者都可能是空指標（版面重建期間常態），
+    /// 而寫死的索引也不保證在 NodeListCount 之內；任何一項不成立就回 null 交給呼叫端判斷——
+    /// 直接解參考下去是 AccessViolation，try/catch 攔不到。
+    /// </summary>
+    private unsafe AtkImageNode* GetImageNode(AtkComponentButton* button, uint index)
+    {
+        if (button == null || button->UldManager.NodeList == null || button->UldManager.NodeListCount <= index)
+            return null;
+
+        var node = button->UldManager.NodeList[index];
+        return node == null ? null : (AtkImageNode*)node;
+    }
+
+    private unsafe AtkImageNode* GetBackgroundImageNode(AtkComponentButton* button) => GetImageNode(button, 3);
+    private unsafe AtkImageNode* GetIconImageNode(AtkComponentButton* button) => GetImageNode(button, 6);
 }
