@@ -19,13 +19,13 @@
 
 只做台服相容性修正（Dalamud 版本、繁中翻譯），功能與上游相同。
 
-## 台服（TC）分支說明
+## 安裝
 
-安裝方式：在 Dalamud 設定的「自訂插件庫」加入
-`https://raw.githubusercontent.com/ffxiv-tc-port/DalamudPluginsTC/main/repo.json` 並啟用，
-再從插件列表安裝。
+`/xlsettings` 開「Dalamud 設定」→「試驗性功能」→「第三方插件倉庫」，加入 `https://raw.githubusercontent.com/ffxiv-tc-port/DalamudPluginsTC/main/repo.json` 並啟用、儲存，再到「插件管理員」（`/xlplugins`）安裝。
 
 請**不要**改用上游的 `https://puni.sh/api/repository/veyn` 安裝 —— 上游版本已改用新版 Dalamud API，
 在台服客戶端載不起來。
 
 原作者：[awgil](https://github.com/awgil)
+
+授權：上游未附授權。
